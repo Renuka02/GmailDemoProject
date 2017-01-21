@@ -1,22 +1,35 @@
 package com.selenium.gmail.base;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import com.selenium.gmail.utilities.dataUtil;
+//import com.selenium.gmail.utilities.dataUtil;
+
+import com.relevantcodes.extentreports.ExtentReports;
+import com.relevantcodes.extentreports.ExtentTest;
+import com.relevantcodes.extentreports.LogStatus;
+import com.selenium.gmail.utilities.ExtentManager;
 
 public class BaseTest {
 	
 	public static WebDriver driver;
 	 public static Properties prop;
+	 public ExtentReports rep = ExtentManager.getInstance();
+	 public ExtentTest test;
+	 
 	 //initialize properties
 	public static void init(){
 		    prop = new Properties();
@@ -60,16 +73,35 @@ public class BaseTest {
 	public void type(String xpathElekey ,String data){
 		driver.findElement(By.xpath((prop.getProperty(xpathElekey)))).sendKeys(data);;
 	}
+	//taking screenshot method
+	public void takeScreenShot(){
+		Date d = new Date();
+		String filename = d.toString().replace(":","_").replace(" ","_")+".png";
+		File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+		try
+		{
+		FileUtils.copyFile(scrFile, new File(System.getProperty("user.dir")+"//screenshots//"+filename));
+		}
+		catch(Exception e)
+		{
+			
+		}
+		
+		test.log(LogStatus.INFO,"Screenshot->"+test.addScreenCapture(System.getProperty("user.dir")+"//screenshots//"+filename));
+	}
+	
+	
 /****************************************app function *********************************/
 	
 	
-	public boolean doLogin(String username,String password){
-   	 type("logintextbox",username);
+	public boolean doLogin(){
+   	 type("logintextbox",prop.getProperty("username"));
+   	 
    	 click("btn_next");
    	//WebDriverWait wait = new WebDriverWait(driver, 10);
 	//WebElement element = wait.until(
 	//ExpectedConditions.visibilityOfElementLocated(By.xpath(prop.getProperty("passwordtextbox"))));
-   	 type("passwordtextbox",password);
+   	 type("passwordtextbox",prop.getProperty("password"));
    	 click("btn_login");
    	   return false;
     }

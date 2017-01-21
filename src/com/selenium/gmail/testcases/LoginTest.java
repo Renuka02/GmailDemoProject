@@ -5,6 +5,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import com.relevantcodes.extentreports.LogStatus;
 import com.selenium.gmail.base.BaseTest;
 import com.selenium.gmail.utilities.dataUtil;
 
@@ -13,22 +14,24 @@ public class LoginTest extends BaseTest {
      @BeforeClass	
      public void initialize() throws Exception{
     	 init();
+    	 test=rep.startTest("loginTest");
+    	 test.log(LogStatus.INFO, "starting the login test");
     	 dataUtil.setExcelFile(prop.getProperty("path"),"LoginTests");
     	 
      }
-     @DataProvider(name = "loginTests")
+     @DataProvider(name = "LoginTests")
  	public Object[][] dataProvider() {
  		Object[][] testData = dataUtil.getTestData("Invalid_Login");
  		return testData;
  	}
 
-	@Test(dataProvider="loginTests")
+	@Test(dataProvider="LoginTests")
 
-		public void doLoginTest(String username,String password) throws Exception{
+		public void doLoginTest() throws Exception{
 			openBrowser();
 			navigate("gmail_url");
-			doLogin(username,password);
-			//logout();
+			doLogin();
+			takeScreenShot();
 			
 	}
 		@AfterClass

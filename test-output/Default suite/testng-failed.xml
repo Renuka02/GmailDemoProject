@@ -5,7 +5,7 @@
     <classes>
       <class name="com.selenium.gmail.testcases.FileUpload">
         <methods>
-          <include name="fileUpload"/>
+          <include name="fileUpload" invocation-numbers="0"/>
           <include name="afterClass"/>
           <include name="beforeClass"/>
         </methods>
